@@ -1,6 +1,8 @@
 export class Ship {
-    
-    constructor(length) {
+    isVertical = false;
+
+    constructor(name, length) {
+        this.name = name;
         this.length = length;
         this.defense = this.buildShip();
     }
