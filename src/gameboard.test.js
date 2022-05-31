@@ -12,7 +12,7 @@ beforeEach(() => {
 test('ship placement, horizontal', () =>  {
     testBoard.placeShip(testShip, 1, 2);
 
-    expect(testBoard.grid[1]).toStrictEqual([0,0,'ship','ship','ship',0,0,0,0,0]);
+    expect(testBoard.grid[1]).toStrictEqual([0,0,'ship0','ship1','ship2',0,0,0,0,0]);
 });
 
 test('ship placement, vertical', () =>  {
@@ -21,9 +21,9 @@ test('ship placement, vertical', () =>  {
 
     expect(testBoard.grid).toStrictEqual([
         [0,0,0,0,0,0,0,0,0,0],
-        [0,0,'ship',0,0,0,0,0,0,0],
-        [0,0,'ship',0,0,0,0,0,0,0],
-        [0,0,'ship',0,0,0,0,0,0,0],
+        [0,0,'ship0',0,0,0,0,0,0,0],
+        [0,0,'ship1',0,0,0,0,0,0,0],
+        [0,0,'ship2',0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0,0],
@@ -44,5 +44,28 @@ test('shot hit', () => {
     testBoard.placeShip(testBoard.destroyer, 1, 2);
     testBoard.receiveAttack(1, 3);
 
-    expect(testShip.defense).toStrictEqual(['o', 'x', 'o']);
+    expect(testBoard.destroyer.defense).toStrictEqual(['o', 'x', 'o']);
+});
+
+test('ship sunk', () => {
+    testBoard.placeShip(testBoard.destroyer, 1, 2);
+    testBoard.receiveAttack(1, 2);
+    testBoard.receiveAttack(1, 3);
+    testBoard.receiveAttack(1, 4);
+
+    expect(testBoard.destroyer.isOperational).toBe(false);
+});
+
+test('fleet sunk', () => {
+    testBoard.placeShip(testBoard.carrier, 1, 2);
+    testBoard.placeShip(testBoard.battleship, 2, 2);
+    testBoard.placeShip(testBoard.destroyer, 3, 2);
+    testBoard.placeShip(testBoard.submarine, 4, 2);
+    testBoard.placeShip(testBoard.patrol, 5, 2);
+
+    testBoard.allShips.forEach(ship => {
+        ship.isOperational = false;
+    });
+
+    expect(testBoard.isFleetSunk()).toBe(true);
 });

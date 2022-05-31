@@ -8,7 +8,7 @@ export class Gameboard {
     submarine = new Ship('submarine', 3);
     patrol = new Ship('patrol', 2);
 
-    allShips = [this.carrier, this.battleship, this.destroyer, this.submarine, this.patrol];
+    allShips = [];
 
     grid = [
         [0,0,0,0,0,0,0,0,0,0],
@@ -25,13 +25,20 @@ export class Gameboard {
     ];
 
     placeShip(ship, x, y) {
+        let index = 0;
+
         if(!ship.isVertical) {
-            this.grid[x].fill(ship.name, y, y + ship.length);
+            for (; index < ship.length; index++) {
+                this.grid[x].fill(ship.name + index, y, ++y);
+            }
+            
         } else {
             for (let i = x; i < x + ship.length; i++) {
-                this.grid[i].splice(y, 1, ship.name);
+                this.grid[i].splice(y, 1, ship.name + index++);
             }
         }
+
+        this.allShips.push(ship);
     }
 
     receiveAttack(x, y) {
@@ -39,8 +46,12 @@ export class Gameboard {
             this.miss(x, y);
         } else {
             this.allShips.forEach(ship => {
-                if (ship.name === this.grid[x][y]) {
-                    ship.hit();
+                let hitShip = this.grid[x][y].slice(0, -1);
+                let hitIndex = this.grid[x][y].slice(-1);
+
+                if (ship.name === hitShip) {
+                    ship.hit(hitIndex);
+                    this.isSunk(ship);
                 }
             });
         }
@@ -49,5 +60,23 @@ export class Gameboard {
 
     miss(x, y) {
         this.grid[x][y] = '-';
+    }
+
+    isSunk(ship) {
+        ship.defense.every(el => {
+            if (el === 'x') {
+                ship.isOperational = false;
+                this.isFleetSunk();
+            }
+        });
+    }
+
+    isFleetSunk() {
+        let result = this.allShips.every(ship => {
+            if (ship.isOperational === false) {
+                return true;
+            }
+        });
+        return result;
     }
 }
