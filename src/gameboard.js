@@ -54,6 +54,8 @@ export class Gameboard {
                     this.isSunk(ship);
                 }
             });
+
+            this.grid[x][y] = '-';
         }
 
     }
