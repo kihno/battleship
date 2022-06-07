@@ -30,13 +30,13 @@ export const ui = (() => {
     function createPlayerGrid(player) {
         for (let i = 0; i < 10; i++) {
             player.fleet.grid[i].forEach(square => {
-                let div = document.createElement('div');
-                div.className = 'cell';
+                let cell = document.createElement('button');
+                cell.className = 'cell';
 
                 if (player === playerOne) {
-                    playerBoard.appendChild(div);
+                    playerBoard.appendChild(cell);
                 } else {
-                    aiBoard.appendChild(div);
+                    aiBoard.appendChild(cell);
                 }
             });
         }
