@@ -8,7 +8,7 @@ export class Gameboard {
     submarine = new Ship('submarine', 3);
     patrol = new Ship('patrol', 2);
 
-    allShips = [];
+    allShips = [this.carrier, this.battleship, this.destroyer, this.submarine, this.patrol];
 
     grid = [
         [0,0,0,0,0,0,0,0,0,0],
@@ -37,8 +37,6 @@ export class Gameboard {
                 this.grid[i].splice(y, 1, ship.name + index++);
             }
         }
-
-        this.allShips.push(ship);
     }
 
     receiveAttack(x, y) {
@@ -55,7 +53,7 @@ export class Gameboard {
                 }
             });
 
-            this.grid[x][y] = '-';
+            this.grid[x][y] = 'x';
         }
 
     }

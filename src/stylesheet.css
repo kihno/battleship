@@ -1,3 +1,14 @@
+@font-face {
+    font-family: 'major_snafuregular';
+    src: url('major_shift-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+h1 {
+    font-family: 'major_snafuregular';
+}
+
 #display {
     display: flex;
     width: 100%;
@@ -7,14 +18,18 @@
 .board {
     display: grid;
     grid: repeat(10, 1fr) / repeat(10, 1fr);
-    place-content: stretch;
-    width: 40%;
-    height: 0;
-    padding-bottom: 40%;
+    width: 400px;
+    height: 400px;
 }
 
 .cell {
-    width: 100%;
-    height: 100%;
     border: 1px solid black;
+}
+
+.cell[data-value='-']:after {
+    content: '-';
+}
+
+.cell[data-value='x']:after {
+    content: 'x';
 }
