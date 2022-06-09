@@ -26,18 +26,63 @@ export class Gameboard {
 
     placeShip(ship, x, y) {
         let index = 0;
+        let space;
 
         if(!ship.isVertical) {
             for (; index < ship.length; index++) {
-                this.grid[x].fill(ship.name + index, y, ++y);
+                space = this.grid[x].slice(y, y + ship.length);
+
+                if (space.every(this.isZero)) {
+                    this.grid[x].fill(ship.name + index, y, ++y);
+                } else {
+                    if (ship.isVertical) {
+                        ship.isVertical = false;
+                    } else {
+                        ship.isVertical = true;
+                    }
+                    x = Math.floor(Math.random() * 10);
+                    y = Math.floor(Math.random() * 10);
+                    this.placeShip(ship, x, y);
+                }
             }
             
         } else {
-            for (let i = x; i < x + ship.length; i++) {
-                this.grid[i].splice(y, 1, ship.name + index++);
+            space = [];
+            // for (let i = x; i < x + ship.length; i++) {
+            //     let item = this.grid[i].slice(y, y + 1);
+            //     space.concat(item);
+            // }
+
+            this.grid.forEach(row => {
+                let cell = row.slice(y, y+1);
+                space.concat(cell);
+            })
+
+            if (space.every(this.isZero))  {
+                for (let j = x; j < x + ship.length; j++) {
+                    this.grid[j].splice(y, 1, ship.name + index++);
+                }
+
+            } else {
+                if (ship.isVertical) {
+                    ship.isVertical = false;
+                } else {
+                    ship.isVertical = true;
+                }
+                x = Math.floor(Math.random() * 10);
+                y = Math.floor(Math.random() * 10);
+                this.placeShip(ship, x, y);
             }
         }
     }
+
+    isZero(num) {
+        if (num === 0) {
+            return true;
+        } else {
+            return false;
+        }
+    } 
 
     receiveAttack(x, y) {
         if (this.grid[x][y] === 0) {

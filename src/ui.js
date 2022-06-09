@@ -6,10 +6,10 @@ export const ui = (() => {
     const aiBoard = document.getElementById('aiBoard');
     const playButton = document.getElementById('playButton');
 
-    let playerOne;
-    let playerTwo;
-    let currentPlayer = playerOne;
-    let opponent = playerTwo;
+    // let playerOne;
+    // let playerTwo;
+    // let currentPlayer = playerOne;
+    // let opponent = playerTwo;
 
     // function createPlayButton() {
     //     let button = document.createElement('button');
@@ -20,8 +20,8 @@ export const ui = (() => {
     // }
 
     function createGame() {
-        playerOne = new Player;
-        playerTwo = new Player;
+        // playerOne = new Player;
+        // playerTwo = new Player;
 
         createPlayerGrid(playerOne);
         createPlayerGrid(playerTwo);  
@@ -50,18 +50,18 @@ export const ui = (() => {
         placeComputerShips();
     }
 
-    function placeComputerShips() {
-        playerTwo.fleet.allShips.forEach(ship => {
-            let position = [true, false];
-            ship.isVertical = position[Math.floor(Math.random()*position.length)];
-            let x = Math.floor(Math.random() * 10);
-            let y = Math.floor(Math.random() * 10);
+    // function placeComputerShips() {
+    //     playerTwo.fleet.allShips.forEach(ship => {
+    //         let position = [true, false];
+    //         ship.isVertical = position[Math.floor(Math.random()*position.length)];
+    //         let x = Math.floor(Math.random() * 10 - ship.length);
+    //         let y = Math.floor(Math.random() * 10 - ship.length);
 
-            playerTwo.fleet.placeShip(ship, x, y);
-        });
+    //         playerTwo.fleet.placeShip(ship, x, y);
+    //     });
 
-        console.log(playerTwo.fleet.grid);
-    }
+    //     console.log(playerTwo.fleet.grid);
+    // }
 
     function fire(e) {
         let x = e.target.dataset.x;
@@ -73,7 +73,4 @@ export const ui = (() => {
 
     playButton.addEventListener('click', createGame);
 
-    return {
-    
-    }
 })();
