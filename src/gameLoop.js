@@ -7,6 +7,7 @@ export const game = (() => {
     let p2;
 
     pubsub.sub('newGame', createGame);
+    pubsub.sub('missileLaunched', missileStrike);
 
     function createGame() {
         p1 = new Player;
@@ -22,6 +23,13 @@ export const game = (() => {
         pubsub.pub('gameCreated', players);
 
         return p2;
+    }
+
+    function missileStrike(coordinates) {
+        p1.attack(p2, coordinates[0], coordinates[1]);
+
+        let location = p2.fleet.grid[coordinates[0]][coordinates[1]];
+        pubsub.pub('missileStrike', [coordinates[2], location]);
     }
 
     function placeComputerShips(player) {
