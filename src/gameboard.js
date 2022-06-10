@@ -21,7 +21,6 @@ export class Gameboard {
         [0,0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0,0]
     ];
 
@@ -35,29 +34,16 @@ export class Gameboard {
 
                 if (space.every(this.isZero)) {
                     this.grid[x].fill(ship.name + index, y, ++y);
-                } else {
-                    if (ship.isVertical) {
-                        ship.isVertical = false;
-                    } else {
-                        ship.isVertical = true;
-                    }
-                    x = game.generateCoordinate();
-                    y = game.generateCoordinate();
-                    this.placeShip(ship, x, y);
+                    ship.isPlaced = true;
                 }
             }
             
         } else {
             space = [];
-            // for (let i = x; i < x + ship.length; i++) {
-            //     let item = this.grid[i].slice(y, y + 1);
-            //     space.concat(item);
-            // }
-
-            this.grid.forEach(row => {
-                let cell = row.slice(y, y+1);
-                space.concat(cell);
-            })
+            for (let i = x; i < x + ship.length; i++) {
+                let cell = this.grid[i][y];
+                space.push(cell);
+            }
 
             if (space.every(this.isZero))  {
                 let n = 0;
@@ -65,26 +51,13 @@ export class Gameboard {
                     this.grid[j].fill(ship.name + n, y, y+1);
                     n++;
                 }
-
-            } else {
-                if (ship.isVertical) {
-                    ship.isVertical = false;
-                } else {
-                    ship.isVertical = true;
-                }
-                x = game.generateCoordinate();
-                y = game.generateCoordinate();
-                this.placeShip(ship, x, y);
+                ship.isPlaced = true;
             }
         }
     }
 
     isZero(num) {
-        if (num === 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return num === 0;
     } 
 
     receiveAttack(x, y) {

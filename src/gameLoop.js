@@ -1,4 +1,4 @@
-import {Player} from './player';
+import { Player } from './player';
 import { pubsub } from './pubsub';
 
 export const game = (() => {
@@ -20,28 +20,36 @@ export const game = (() => {
         placeComputerShips(p2);
 
         pubsub.pub('gameCreated', players);
+
+        return p2;
     }
 
     function placeComputerShips(player) {
         player.fleet.allShips.forEach(ship => {
-            let position = [true, false];
-            ship.isVertical = position[Math.floor(Math.random()*position.length)];
-            let x = generateCoordinate(ship.length);
-            let y = generateCoordinate(ship.length);
-
-            player.fleet.placeShip(ship, x, y);
+            while (!ship.isPlaced) {
+                let position = [true, false];
+                ship.isVertical = position[Math.floor(Math.random()*position.length)];
+                let x = generateCoordinate(ship.length);
+                let y = generateCoordinate(ship.length);
+    
+                player.fleet.placeShip(ship, x, y);
+            }
         });
         console.log(player.fleet.grid);
     }
 
     function generateCoordinate(length) {
-        let num = Math.floor(Math.random() * (9 - length + 1));
+        let num = Math.floor(Math.random() * 10);
+
+        if (num > 10 - length) {
+            num = 10 - length;
+        }
 
         return num;
     }
 
     return {
-        generateCoordinate, createGame,
+        generateCoordinate, createGame, p2,
     }
 
 })();

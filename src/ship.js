@@ -1,6 +1,7 @@
 export class Ship {
     isVertical = false;
     isOperational = true;
+    isPlaced = false;
 
     constructor(name, length) {
         this.name = name;
