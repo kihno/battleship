@@ -7,10 +7,11 @@ beforeEach(() => {
 });
 
 test('carrier placement', () => {
+    
     let carrierCount = 0;
 
     for (let i = 0; i < 10; i++) {
-        let zone = game.playerTwo.fleet.grid[i]
+        let zone = game.playerTwo.fleet.grid[i];
         for (const ship of zone) {
             if (ship.toString().slice(0, -1) === 'carrier') {
                 carrierCount++;
@@ -22,10 +23,11 @@ test('carrier placement', () => {
 });
 
 test('battleship placement', () => {
+    
     let battleshipCount = 0;
 
     for (let i = 0; i < 10; i++) {
-        let zone = game.playerTwo.fleet.grid[i]
+        let zone = game.playerTwo.fleet.grid[i];
         for (const ship of zone) {
             if (ship.toString().slice(0, -1) === 'battleship') {
                 battleshipCount++;
@@ -37,10 +39,11 @@ test('battleship placement', () => {
 });
 
 test('destroyer placement', () => {
+    
     let destroyerCount = 0;
 
     for (let i = 0; i < 10; i++) {
-        let zone = game.playerTwo.fleet.grid[i]
+        let zone = game.playerTwo.fleet.grid[i];
         for (const ship of zone) {
             if (ship.toString().slice(0, -1) === 'destroyer') {
                 destroyerCount++;
@@ -52,10 +55,11 @@ test('destroyer placement', () => {
 });
 
 test('submarine placement', () => {
+    
     let submarineCount = 0;
 
     for (let i = 0; i < 10; i++) {
-        let zone = game.playerTwo.fleet.grid[i]
+        let zone = game.playerTwo.fleet.grid[i];
         for (const ship of zone) {
             if (ship.toString().slice(0, -1) === 'submarine') {
                 submarineCount++;
@@ -67,10 +71,11 @@ test('submarine placement', () => {
 });
 
 test('patrol placement', () => {
+    
     let patrolCount = 0;
 
     for (let i = 0; i < 10; i++) {
-        let zone = game.playerTwo.fleet.grid[i]
+        let zone = game.playerTwo.fleet.grid[i];
         for (const ship of zone) {
             if (ship.toString().slice(0, -1) === 'patrol') {
                 patrolCount++;

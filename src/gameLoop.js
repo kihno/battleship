@@ -1,30 +1,47 @@
 import {Player} from './player';
+import { pubsub } from './pubsub';
 
 export const game = (() => {
 
-    let playerOne = new Player;
-    let playerTwo = new Player;
+    let p1;
+    let p2;
+
+    pubsub.sub('newGame', createGame);
 
     function createGame() {
-        // playerOne = new Player;
-        // playerTwo = new Player;
+        p1 = new Player;
+        p2 = new Player;
 
-        placeComputerShips();
+        const players = {
+            p1,
+            p2,
+        }
+
+        placeComputerShips(p2);
+
+        pubsub.pub('gameCreated', players);
     }
 
-    function placeComputerShips() {
-        playerTwo.fleet.allShips.forEach(ship => {
+    function placeComputerShips(player) {
+        player.fleet.allShips.forEach(ship => {
             let position = [true, false];
             ship.isVertical = position[Math.floor(Math.random()*position.length)];
-            let x = Math.floor(Math.random() * 10);
-            let y = Math.floor(Math.random() * 10);
+            let x = generateCoordinate(ship.length);
+            let y = generateCoordinate(ship.length);
 
-            playerTwo.fleet.placeShip(ship, x, y);
+            player.fleet.placeShip(ship, x, y);
         });
+        console.log(player.fleet.grid);
+    }
+
+    function generateCoordinate(length) {
+        let num = Math.floor(Math.random() * (9 - length + 1));
+
+        return num;
     }
 
     return {
-        createGame, playerOne, playerTwo,
+        generateCoordinate, createGame,
     }
 
 })();

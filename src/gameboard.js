@@ -1,4 +1,5 @@
 import {Ship} from './ship';
+import {game} from './gameLoop';
 
 export class Gameboard {
 
@@ -40,8 +41,8 @@ export class Gameboard {
                     } else {
                         ship.isVertical = true;
                     }
-                    x = Math.floor(Math.random() * 10);
-                    y = Math.floor(Math.random() * 10);
+                    x = game.generateCoordinate();
+                    y = game.generateCoordinate();
                     this.placeShip(ship, x, y);
                 }
             }
@@ -59,8 +60,10 @@ export class Gameboard {
             })
 
             if (space.every(this.isZero))  {
+                let n = 0;
                 for (let j = x; j < x + ship.length; j++) {
-                    this.grid[j].splice(y, 1, ship.name + index++);
+                    this.grid[j].fill(ship.name + n, y, y+1);
+                    n++;
                 }
 
             } else {
@@ -69,8 +72,8 @@ export class Gameboard {
                 } else {
                     ship.isVertical = true;
                 }
-                x = Math.floor(Math.random() * 10);
-                y = Math.floor(Math.random() * 10);
+                x = game.generateCoordinate();
+                y = game.generateCoordinate();
                 this.placeShip(ship, x, y);
             }
         }

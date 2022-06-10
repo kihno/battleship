@@ -1,10 +1,11 @@
 import {Player} from './player';
+import { pubsub } from './pubsub';
 
 export const ui = (() => {
     const display = document.getElementById('display');
     const playerBoard = document.getElementById('playerBoard');
     const aiBoard = document.getElementById('aiBoard');
-    const playButton = document.getElementById('playButton');
+    // const playButton = document.getElementById('playButton');
 
     // let playerOne;
     // let playerTwo;
@@ -19,14 +20,31 @@ export const ui = (() => {
     //     display.appendChild(button);
     // }
 
-    function createGame() {
+    pubsub.sub('gameCreated', renderGame);
+
+    function newGame() {
+        playButton.style.display = 'none';
+        pubsub.pub('newGame');
+    }
+
+    function renderGame(players) {
         // playerOne = new Player;
         // playerTwo = new Player;
 
-        createPlayerGrid(playerOne);
-        createPlayerGrid(playerTwo);  
-        
+        // let players = {
+        //     p1: playerOne,
+        //     p2: playerTwo
+        // }
         playButton.style.display = 'none';
+
+        console.log(players.p2);
+
+        createPlayerGrid(players.p1);
+        createComputerGrid(players.p2);  
+        
+        // playButton.style.display = 'none';
+
+        // pubsub.pub('newGame', players);s
     }
 
     function createPlayerGrid(player) {
@@ -38,16 +56,26 @@ export const ui = (() => {
                 cell.dataset.y = index;
                 cell.dataset.value = item;
 
-                if (player === playerOne) {
-                    playerBoard.appendChild(cell);
-                } else {
-                    aiBoard.appendChild(cell);
-                    cell.addEventListener('click', fire);
-                }
+                playerBoard.appendChild(cell);
             });
         }
 
-        placeComputerShips();
+        // placeComputerShips();
+    }
+
+    function createComputerGrid(player) {
+        for (let i = 0; i < 10; i++) {
+            player.fleet.grid[i].forEach((item, index) => {
+                let cell = document.createElement('button');
+                cell.className = 'cell';
+                cell.dataset.x = i;
+                cell.dataset.y = index;
+                cell.dataset.value = item;
+
+                aiBoard.appendChild(cell);
+                cell.addEventListener('click', fire);
+            });
+        }
     }
 
     // function placeComputerShips() {
@@ -71,6 +99,7 @@ export const ui = (() => {
         e.target.removeEventListener('click', fire);
     }
 
-    playButton.addEventListener('click', createGame);
+    // playButton.addEventListener('click', newGame);
+    
 
 })();
