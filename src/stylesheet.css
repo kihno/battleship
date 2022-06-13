@@ -5,14 +5,27 @@
     font-style: normal;
 }
 
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 h1 {
     font-family: 'major_snafuregular';
 }
 
 #display {
     display: flex;
+    justify-content: center;
     width: 100%;
     column-gap: 20px;
+}
+
+#shipContainer {
+    display: none;
+    flex-direction: column;
+    width: 100px;
 }
 
 #ships {
@@ -25,6 +38,26 @@ h1 {
     height: 20px;
 }
 
+.vertical {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hide {
+    display: none;
+}
+
+.dragOver {
+    background-color: lightgrey;
+}
+
+.rotate {
+    transform: rotate(-90deg);
+}
+
 .board {
     display: grid;
     grid: repeat(10, 1fr) / repeat(10, 1fr);
@@ -34,6 +67,9 @@ h1 {
 
 .cell {
     border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .cell[data-value='-']:after {

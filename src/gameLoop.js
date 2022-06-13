@@ -8,6 +8,7 @@ export const game = (() => {
 
     pubsub.sub('newGame', createGame);
     pubsub.sub('missileLaunched', missileStrike);
+    pubsub.sub('rotateShip', rotateShip);
 
     function createGame() {
         p1 = new Player;
@@ -23,6 +24,15 @@ export const game = (() => {
         pubsub.pub('gameCreated', players);
 
         return p2;
+    }
+
+    function rotateShip(shipName) {
+        p1.fleet.allShips.forEach(ship => {
+            if (ship.name === shipName) {
+                ship.isVertical = !ship.isVertical;
+                console.log(ship);
+            }
+        });
     }
 
     function missileStrike(coordinates) {
