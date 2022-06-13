@@ -1,11 +1,17 @@
 import { pubsub } from './pubsub';
 import { game } from './gameLoop';
+import Carrier from './img/carrier.png';
+import Battleship from './img/battleship.png';
+import Submarine from './img/submarine.png';
+import Destroyer from './img/destroyer.png';
+import Patrol from './img/patrol.png';
 
 export const events = (() => {
     const playButton = document.getElementById('playButton');
     const display = document.getElementById('display');
     const playerBoard = document.getElementById('playerBoard');
     const aiBoard = document.getElementById('aiBoard');
+    const ships = document.getElementById('ships');
 
     playButton.addEventListener('click', newGame);
 
@@ -22,6 +28,21 @@ export const events = (() => {
 
         createPlayerGrid(players.p1);
         createComputerGrid(players.p2);  
+        renderShips(players.p1);
+    }
+
+    function renderShips(player) {
+        const shipIcons = [Carrier, Battleship, Destroyer, Submarine, Patrol];
+        let i = 0;
+        player.fleet.allShips.forEach(ship => {
+            const image = new Image();
+            image.src = shipIcons[i];
+            image.id = ship.name;
+            image.className = 'ship';
+            image.draggable = true;
+            ships.appendChild(image);
+            i++;
+        });
     }
 
     function createPlayerGrid(player) {

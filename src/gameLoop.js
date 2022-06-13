@@ -59,5 +59,5 @@ export const game = (() => {
     return {
         generateCoordinate, createGame, p2,
     }
-
+    
 })();
