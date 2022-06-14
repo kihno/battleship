@@ -25,7 +25,7 @@ h1 {
 #shipContainer {
     display: none;
     flex-direction: column;
-    width: 100px;
+    width: 200px;
 }
 
 #ships {
@@ -35,12 +35,12 @@ h1 {
 }
 
 .ship {
-    height: 20px;
+    height: 40px;
 }
 
 .vertical {
-    width: 100px;
-    height: 100px;
+    width: 200px;
+    height: 200px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -67,9 +67,11 @@ h1 {
 
 .cell {
     border: 1px solid black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    position: relative;
+}
+
+.cell>img {
+    position: absolute;
 }
 
 .cell[data-value='-']:after {

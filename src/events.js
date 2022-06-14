@@ -50,6 +50,7 @@ export const events = (() => {
             image.className = 'ship';
             image.draggable = true;
             image.addEventListener('dragstart', dragStart);
+            image.addEventListener('dragend', dragEnd);
             div.appendChild(image);
             ships.appendChild(div);
             i++;
@@ -66,8 +67,8 @@ export const events = (() => {
                 cell.dataset.value = item;
 
                 cell.addEventListener('dragenter', dragEnter);
-                // cell.addEventListener('dragover', dragOver);
-                // cell.addEventListener('dragleave', dragLeave);
+                cell.addEventListener('dragover', dragOver);
+                cell.addEventListener('dragleave', dragLeave);
                 cell.addEventListener('drop', drop);
 
                 playerBoard.appendChild(cell);
@@ -99,10 +100,15 @@ export const events = (() => {
 
     function dragStart(e) {
         dragTarget = e.target.id;
-        e.dataTransfer.setData('text/plan', e.target.id);
+        e.dataTransfer.setData('image', e.target.id);
         setTimeout(() => {
             e.target.classList.add('hide');
         });
+    }
+
+    function dragEnd(e) {
+        [...e.target.parentElement.children].forEach(sibling => sibling.classList.remove('dragOver'));
+        e.target.classList.remove('hide');
     }
 
     let firstSibling;
@@ -111,6 +117,8 @@ export const events = (() => {
     let fourthSibling;
 
     function dragEnter(e) {
+        e.preventDefault();
+
         [...e.target.parentElement.children].forEach(sibling => sibling.classList.remove('dragOver'));
         e.target.classList.add('dragOver');
 
@@ -141,31 +149,55 @@ export const events = (() => {
         }
     }
 
-    // function dragOver(e) {
+    function dragOver(e) {
 
-    //     e.target.classList.add('dragOver');
+       e.preventDefault();
 
-    //     if (e.target.id === 'carrier') {
-    //         firstSibling.classList.add('dragOver');
-    //         secondSibling.classList.add('dragOver');
-    //         thirdSibling.classList.add('dragOver');
-    //         fourthSibling.classList.add('dragOver');
-    //     }
-    // }
+        [...e.target.parentElement.children].forEach(sibling => sibling.classList.remove('dragOver'));
+        e.target.classList.add('dragOver');
 
-    // function dragLeave(e) {
-    //     e.target.classList.remove('dragOver');
+        if (dragTarget === 'carrier') {
+            firstSibling = e.target.nextElementSibling;
+            firstSibling.classList.add('dragOver');
+            secondSibling = firstSibling.nextElementSibling;
+            secondSibling.classList.add('dragOver');
+            thirdSibling = secondSibling.nextElementSibling;
+            thirdSibling.classList.add('dragOver');
+            fourthSibling = thirdSibling.nextElementSibling;
+            fourthSibling.classList.add('dragOver');
+        } else if (dragTarget === 'battleship') {
+            firstSibling = e.target.nextElementSibling;
+            firstSibling.classList.add('dragOver');
+            secondSibling = firstSibling.nextElementSibling;
+            secondSibling.classList.add('dragOver');
+            thirdSibling = secondSibling.nextElementSibling;
+            thirdSibling.classList.add('dragOver');
+        } else if (dragTarget === 'destroyer' || dragTarget === 'submarine') {
+            firstSibling = e.target.nextElementSibling;
+            firstSibling.classList.add('dragOver');
+            secondSibling = firstSibling.nextElementSibling;
+            secondSibling.classList.add('dragOver');
+        } else if (dragTarget === 'patrol') {
+            firstSibling = e.target.nextElementSibling;
+            firstSibling.classList.add('dragOver');
+        }
+    }
 
-    //     if (e.target.id === 'carrier') {
-    //         firstSibling.classList.remove('dragOver');
-    //         secondSibling.classList.remove('dragOver');
-    //         thirdSibling.classList.remove('dragOver');
-    //         fourthSibling.classList.remove('dragOver');
-    //     }
-    // }
+    function dragLeave(e) {
+        [...e.target.parentElement.children].forEach(sibling => sibling.classList.remove('dragOver'));
+    }
 
     function drop(e) {
-        // [...e.target.parentElement.children].forEach(sibling => sibling.classList.remove('dragOver'));
+        const target = document.getElementsByClassName('dragOver');
+        pubsub.pub('shipPlaced', target);
+
+        [...e.target.parentElement.children].forEach(sibling => sibling.classList.remove('dragOver'));
+
+        const id = e.dataTransfer.getData('image');
+        const draggable = document.getElementById(id);
+
+        e.target.appendChild(draggable);
+        draggable.classList.remove('hide');
     }
 
 
