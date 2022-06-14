@@ -1,5 +1,4 @@
 import {Ship} from './ship';
-import {game} from './gameLoop';
 
 export class Gameboard {
 
@@ -53,6 +52,14 @@ export class Gameboard {
                 }
                 ship.isPlaced = true;
             }
+        }
+    }
+
+    rotateShip(ship) {
+        if (ship.isVertical === false) {
+            ship.isVertical = true;
+        } else {ss
+            ship.isVertical = false;
         }
     }
 

@@ -23,6 +23,7 @@ export const events = (() => {
     pubsub.sub('missileStrike', renderMissileStrike);
 
     let dragTarget;
+    let gamePlayers;
 
     function newGame() {
         playButton.style.display = 'none';
@@ -36,6 +37,8 @@ export const events = (() => {
         createPlayerGrid(players.p1);
         createComputerGrid(players.p2);  
         renderShips(players.p1);
+
+        gamePlayers = players;
     }
 
     function renderShips(player) {
@@ -115,76 +118,211 @@ export const events = (() => {
     let secondSibling;
     let thirdSibling;
     let fourthSibling;
+    let dropTarget = [];
+
+    function valueZero(el) {
+        return el.dataset.value == 0;
+    }
 
     function dragEnter(e) {
-        e.preventDefault();
-
-        [...e.target.parentElement.children].forEach(sibling => sibling.classList.remove('dragOver'));
-        e.target.classList.add('dragOver');
 
         if (dragTarget === 'carrier') {
-            firstSibling = e.target.nextElementSibling;
-            firstSibling.classList.add('dragOver');
-            secondSibling = firstSibling.nextElementSibling;
-            secondSibling.classList.add('dragOver');
-            thirdSibling = secondSibling.nextElementSibling;
-            thirdSibling.classList.add('dragOver');
-            fourthSibling = thirdSibling.nextElementSibling;
-            fourthSibling.classList.add('dragOver');
+
+            if (gamePlayers.p1.fleet.carrier.isVertical === false) {
+                if (e.target.dataset.y < 6) {
+                    firstSibling = e.target.nextElementSibling;
+                    secondSibling = firstSibling.nextElementSibling;
+                    thirdSibling = secondSibling.nextElementSibling;
+                    fourthSibling = thirdSibling.nextElementSibling;
+                }  else {
+                    e.target.classList.add('invalid');
+                }
+                 
+            } else if (gamePlayers.p1.fleet.carrier.isVertical === true) {
+                if  (e.target.dataset.x < 6) {
+                    let targetX = e.target.dataset.x;
+                    let targetY = e.target.dataset.y;
+
+                    [...e.target.parentElement.children].forEach(sibling => {
+                        if (sibling.dataset.y === targetY && sibling.dataset.x === targetX + 1) {
+                            firstSibling = sibling;
+                        }
+
+                        if (sibling.dataset.y === targetY && sibling.dataset.x === targetX + 2) {
+                            secondSibling = sibling;
+                        }
+
+                        if (sibling.dataset.y === targetY && sibling.dataset.x === targetX + 3) {
+                            thirdSibling = sibling;
+                        }
+
+                        if (sibling.dataset.y === targetY && sibling.dataset.x === targetX + 4) {
+                            fourthSibling = sibling;
+                        }
+
+                    });
+                }  else {
+                    e.target.classList.add('invalid');
+                }
+            } 
+                
+            dropTarget = [e.target, firstSibling, secondSibling, thirdSibling, fourthSibling];
+            
+            if (dropTarget.every(valueZero)) {
+                e.preventDefault();
+                dropTarget.forEach(target => {
+                    target.classList.add('dragOver');
+                });
+            } else {
+                e.target.classList.add('invalid');
+            }
         } else if (dragTarget === 'battleship') {
-            firstSibling = e.target.nextElementSibling;
-            firstSibling.classList.add('dragOver');
-            secondSibling = firstSibling.nextElementSibling;
-            secondSibling.classList.add('dragOver');
-            thirdSibling = secondSibling.nextElementSibling;
-            thirdSibling.classList.add('dragOver');
+
+            if (e.target.dataset.y < 7) {
+                firstSibling = e.target.nextElementSibling;
+                secondSibling = firstSibling.nextElementSibling;
+                thirdSibling = secondSibling.nextElementSibling;
+               
+                dropTarget = [e.target, firstSibling, secondSibling, thirdSibling];
+                
+                if (dropTarget.every(valueZero)) {
+                    e.preventDefault();
+                    dropTarget.forEach(target => {
+                        target.classList.add('dragOver');
+                    });
+                } else {
+                    e.target.classList.add('invalid');
+                }
+            } else {
+                e.target.classList.add('invalid');
+            } 
+
         } else if (dragTarget === 'destroyer' || dragTarget === 'submarine') {
-            firstSibling = e.target.nextElementSibling;
-            firstSibling.classList.add('dragOver');
-            secondSibling = firstSibling.nextElementSibling;
-            secondSibling.classList.add('dragOver');
+            if (e.target.dataset.y < 8) {
+                firstSibling = e.target.nextElementSibling;
+                secondSibling = firstSibling.nextElementSibling;
+               
+                dropTarget = [e.target, firstSibling, secondSibling];
+                
+                if (dropTarget.every(valueZero)) {
+                    e.preventDefault();
+                    dropTarget.forEach(target => {
+                        target.classList.add('dragOver');
+                    });
+                } else {
+                    e.target.classList.add('invalid');
+                }
+            } else {
+                e.target.classList.add('invalid');
+            }
+
         } else if (dragTarget === 'patrol') {
-            firstSibling = e.target.nextElementSibling;
-            firstSibling.classList.add('dragOver');
+            if (e.target.dataset.y < 9) {
+                firstSibling = e.target.nextElementSibling;
+               
+                dropTarget = [e.target, firstSibling];
+                
+                if (dropTarget.every(valueZero)) {
+                    e.preventDefault();
+                    dropTarget.forEach(target => {
+                        target.classList.add('dragOver');
+                    });
+                } else {
+                    e.target.classList.add('invalid');
+                }
+            } else {
+                e.target.classList.add('invalid');
+            }
         }
     }
 
     function dragOver(e) {
 
-       e.preventDefault();
-
-        [...e.target.parentElement.children].forEach(sibling => sibling.classList.remove('dragOver'));
-        e.target.classList.add('dragOver');
-
         if (dragTarget === 'carrier') {
-            firstSibling = e.target.nextElementSibling;
-            firstSibling.classList.add('dragOver');
-            secondSibling = firstSibling.nextElementSibling;
-            secondSibling.classList.add('dragOver');
-            thirdSibling = secondSibling.nextElementSibling;
-            thirdSibling.classList.add('dragOver');
-            fourthSibling = thirdSibling.nextElementSibling;
-            fourthSibling.classList.add('dragOver');
+
+            if (e.target.dataset.y < 6) {
+                firstSibling = e.target.nextElementSibling;
+                secondSibling = firstSibling.nextElementSibling;
+                thirdSibling = secondSibling.nextElementSibling;
+                fourthSibling = thirdSibling.nextElementSibling;
+               
+                dropTarget = [e.target, firstSibling, secondSibling, thirdSibling, fourthSibling];
+                
+                if (dropTarget.every(valueZero)) {
+                    e.preventDefault();
+                    dropTarget.forEach(target => {
+                        target.classList.add('dragOver');
+                    });
+                } else {
+                    e.target.classList.add('invalid');
+                }
+            } else {
+                e.target.classList.add('invalid');
+            }
+
         } else if (dragTarget === 'battleship') {
-            firstSibling = e.target.nextElementSibling;
-            firstSibling.classList.add('dragOver');
-            secondSibling = firstSibling.nextElementSibling;
-            secondSibling.classList.add('dragOver');
-            thirdSibling = secondSibling.nextElementSibling;
-            thirdSibling.classList.add('dragOver');
+
+            if (e.target.dataset.y < 7) {
+                firstSibling = e.target.nextElementSibling;
+                secondSibling = firstSibling.nextElementSibling;
+                thirdSibling = secondSibling.nextElementSibling;
+               
+                dropTarget = [e.target, firstSibling, secondSibling, thirdSibling];
+                
+                if (dropTarget.every(valueZero)) {
+                    e.preventDefault();
+                    dropTarget.forEach(target => {
+                        target.classList.add('dragOver');
+                    });
+                } else {
+                    e.target.classList.add('invalid');
+                }
+            } else {
+                e.target.classList.add('invalid');
+            } 
+
         } else if (dragTarget === 'destroyer' || dragTarget === 'submarine') {
-            firstSibling = e.target.nextElementSibling;
-            firstSibling.classList.add('dragOver');
-            secondSibling = firstSibling.nextElementSibling;
-            secondSibling.classList.add('dragOver');
+            if (e.target.dataset.y < 8) {
+                firstSibling = e.target.nextElementSibling;
+                secondSibling = firstSibling.nextElementSibling;
+               
+                dropTarget = [e.target, firstSibling, secondSibling];
+                
+                if (dropTarget.every(valueZero)) {
+                    e.preventDefault();
+                    dropTarget.forEach(target => {
+                        target.classList.add('dragOver');
+                    });
+                } else {
+                    e.target.classList.add('invalid');
+                }
+            } else {
+                e.target.classList.add('invalid');
+            }
+
         } else if (dragTarget === 'patrol') {
-            firstSibling = e.target.nextElementSibling;
-            firstSibling.classList.add('dragOver');
+            if (e.target.dataset.y < 9) {
+                firstSibling = e.target.nextElementSibling;
+               
+                dropTarget = [e.target, firstSibling];
+                
+                if (dropTarget.every(valueZero)) {
+                    e.preventDefault();
+                    dropTarget.forEach(target => {
+                        target.classList.add('dragOver');
+                    });
+                } else {
+                    e.target.classList.add('invalid');
+                }
+            } else {
+                e.target.classList.add('invalid');
+            }
         }
     }
 
     function dragLeave(e) {
         [...e.target.parentElement.children].forEach(sibling => sibling.classList.remove('dragOver'));
+        [...e.target.parentElement.children].forEach(sibling => sibling.classList.remove('invalid'));
     }
 
     function drop(e) {
@@ -198,6 +336,15 @@ export const events = (() => {
 
         e.target.appendChild(draggable);
         draggable.classList.remove('hide');
+
+        dropTarget.forEach(target => {
+            target.dataset.value = id;
+        });
+
+        let emptyDiv = document.getElementById(id + 'Container');
+        if (ships.contains(emptyDiv)) {
+            ships.removeChild(emptyDiv);
+        }
     }
 
 

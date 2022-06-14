@@ -30,7 +30,6 @@ export const game = (() => {
         p1.fleet.allShips.forEach(ship => {
             if (ship.name === shipName) {
                 ship.isVertical = !ship.isVertical;
-                console.log(ship);
             }
         });
     }
@@ -67,7 +66,9 @@ export const game = (() => {
     }
 
     return {
-        generateCoordinate, createGame, p2,
+        generateCoordinate, createGame, 
+        p1: p1, 
+        p2: p2,
     }
     
 })();

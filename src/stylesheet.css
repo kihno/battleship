@@ -54,6 +54,10 @@ h1 {
     background-color: lightgrey;
 }
 
+.invalid {
+    background-color: lightcoral;
+}
+
 .rotate {
     transform: rotate(-90deg);
 }
