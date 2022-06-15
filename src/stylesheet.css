@@ -38,12 +38,24 @@ h1 {
     height: 40px;
 }
 
-.vertical {
+#carrierContainer.vertical {
     width: 200px;
     height: 200px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+}
+
+#battleshipContainer.vertical {
+    width: 200px;
+    height: 160px;
+}
+
+#destroyerContainer.vertical, #submarineContainer.vertical {
+    width: 200px;
+    height: 120px;
+}
+
+#patrolContainer.vertical {
+    width: 200px;
+    height: 80px;
 }
 
 .hide {
@@ -59,7 +71,8 @@ h1 {
 }
 
 .rotate {
-    transform: rotate(-90deg);
+    transform: rotate(90deg) translate(-40px);
+    transform-origin: bottom left;
 }
 
 .board {
@@ -72,6 +85,7 @@ h1 {
 .cell {
     border: 1px solid black;
     position: relative;
+    display: flex;
 }
 
 .cell>img {
