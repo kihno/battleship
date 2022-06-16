@@ -9,6 +9,7 @@ export const game = (() => {
     pubsub.sub('newGame', createGame);
     pubsub.sub('missileLaunched', missileStrike);
     pubsub.sub('rotateShip', rotateShip);
+    pubsub.sub('shipPlaced', placePlayerShips);
 
     function createGame() {
         p1 = new Player;
@@ -39,6 +40,21 @@ export const game = (() => {
 
         let location = p2.fleet.grid[coordinates[0]][coordinates[1]];
         pubsub.pub('missileStrike', [coordinates[2], location]);
+    }
+
+    function placePlayerShips(cell) {
+        let targetShip;
+
+        p1.fleet.allShips.forEach(ship => {
+            if (cell.dataset.value === ship.name) {
+                targetShip = ship;
+            }
+        });
+
+        let x = parseInt(cell.dataset.x);
+        let y = parseInt(cell.dataset.y);
+
+        p1.fleet.placeShip(targetShip, x, y);
     }
 
     function placeComputerShips(player) {

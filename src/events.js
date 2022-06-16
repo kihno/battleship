@@ -282,154 +282,7 @@ export const events = (() => {
     }
 
     function dragOver(e) {
-
-        if (dragTarget === 'carrier') {
-
-            if (vertical === false) {
-                if (e.target.dataset.y < 6) {
-                    firstSibling = e.target.nextElementSibling;
-                    secondSibling = firstSibling.nextElementSibling;
-                    thirdSibling = secondSibling.nextElementSibling;
-                    fourthSibling = thirdSibling.nextElementSibling;
-                    dropTarget = [e.target, firstSibling, secondSibling, thirdSibling, fourthSibling];
-                } else {
-                    e.target.classList.add('invalid');
-                    return;
-                }
-                 
-            } else if (vertical === true) {
-                if  (e.target.dataset.x < 6) {
-
-                    let cells = [...e.target.parentElement.children];
-                    let index = cells.indexOf(e.target);
-
-                    firstSibling = cells[index + 10];
-                    secondSibling = cells[index + 20];
-                    thirdSibling = cells[index + 30];
-                    fourthSibling = cells[index + 40];
-                    dropTarget = [e.target, firstSibling, secondSibling, thirdSibling, fourthSibling];
-                } else {
-                    e.target.classList.add('invalid');
-                    return;
-                }
-            } 
-                
-            if (dropTarget !== [] && dropTarget.every(valueZero)) {
-                e.preventDefault();
-                dropTarget.forEach(target => {
-                    target.classList.add('dragOver');
-                });
-            } else {
-                e.target.classList.add('invalid');
-            }
-        } else if (dragTarget === 'battleship') {
-
-            if (vertical === false) {
-                if (e.target.dataset.y < 7) {
-                    firstSibling = e.target.nextElementSibling;
-                    secondSibling = firstSibling.nextElementSibling;
-                    thirdSibling = secondSibling.nextElementSibling;
-                    dropTarget = [e.target, firstSibling, secondSibling, thirdSibling];
-                } else {
-                    e.target.classList.add('invalid');
-                    return;
-                }
-                 
-            } else if (vertical === true) {
-                if  (e.target.dataset.x < 7) {
-
-                    let cells = [...e.target.parentElement.children];
-                    let index = cells.indexOf(e.target);
-
-                    firstSibling = cells[index + 10];
-                    secondSibling = cells[index + 20];
-                    thirdSibling = cells[index + 30];
-                    dropTarget = [e.target, firstSibling, secondSibling, thirdSibling];
-                } else {
-                    e.target.classList.add('invalid');
-                    return;
-                }
-            } 
-                
-            if (dropTarget !== [] && dropTarget.every(valueZero)) {
-                e.preventDefault();
-                dropTarget.forEach(target => {
-                    target.classList.add('dragOver');
-                });
-            } else {
-                e.target.classList.add('invalid');
-            }
-
-        } else if (dragTarget === 'destroyer' || dragTarget === 'submarine') {
-
-            if (vertical === false) {
-                if (e.target.dataset.y < 8) {
-                    firstSibling = e.target.nextElementSibling;
-                    secondSibling = firstSibling.nextElementSibling;
-                    dropTarget = [e.target, firstSibling, secondSibling];
-                } else {
-                    e.target.classList.add('invalid');
-                    return;
-                }
-                 
-            } else if (vertical === true) {
-                if  (e.target.dataset.x < 8) {
-
-                    let cells = [...e.target.parentElement.children];
-                    let index = cells.indexOf(e.target);
-
-                    firstSibling = cells[index + 10];
-                    secondSibling = cells[index + 20];
-                    dropTarget = [e.target, firstSibling, secondSibling];
-                } else {
-                    e.target.classList.add('invalid');
-                    return;
-                }
-            } 
-                
-            if (dropTarget !== [] && dropTarget.every(valueZero)) {
-                e.preventDefault();
-                dropTarget.forEach(target => {
-                    target.classList.add('dragOver');
-                });
-            } else {
-                e.target.classList.add('invalid');
-            }
-
-        } else if (dragTarget === 'patrol') {
-            if (vertical === false) {
-                if (e.target.dataset.y < 9) {
-                    firstSibling = e.target.nextElementSibling;
-                    dropTarget = [e.target, firstSibling];
-                } else {
-                    e.target.classList.add('invalid');
-                    return;
-                }
-                 
-            } else if (vertical === true) {
-
-                if  (e.target.dataset.x < 9) {
-
-                    let cells = [...e.target.parentElement.children];
-                    let index = cells.indexOf(e.target);
-
-                    firstSibling = cells[index + 10];
-                    dropTarget = [e.target, firstSibling];
-                } else {
-                    e.target.classList.add('invalid');
-                    return;
-                }
-            } 
-                
-            if (dropTarget !== [] && dropTarget.every(valueZero)) {
-                e.preventDefault();
-                dropTarget.forEach(target => {
-                    target.classList.add('dragOver');
-                });
-            } else {
-                e.target.classList.add('invalid');
-            }
-        }
+        dragEnter(e);
     }
 
     function dragLeave(e) {
@@ -438,9 +291,6 @@ export const events = (() => {
     }
 
     function drop(e) {
-        const target = document.getElementsByClassName('dragOver');
-        pubsub.pub('shipPlaced', target);
-
         [...e.target.parentElement.children].forEach(sibling => sibling.classList.remove('dragOver'));
         [...e.target.parentElement.children].forEach(sibling => {
             if (sibling.dataset.value === dragTarget) {
@@ -464,6 +314,8 @@ export const events = (() => {
         }
 
         vertical = false;
+
+        pubsub.pub('shipPlaced', e.target);
     }
 
 

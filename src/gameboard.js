@@ -39,7 +39,7 @@ export class Gameboard {
             
         } else {
             space = [];
-            for (let i = x; i < x + ship.length; i++) {
+            for (let i = parseInt(x); i < x + ship.length; i++) {
                 let cell = this.grid[i][y];
                 space.push(cell);
             }
@@ -53,6 +53,8 @@ export class Gameboard {
                 ship.isPlaced = true;
             }
         }
+
+        console.log(this.grid);
     }
 
     rotateShip(ship) {
