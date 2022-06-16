@@ -40,6 +40,21 @@ export const game = (() => {
 
         let location = p2.fleet.grid[coordinates[0]][coordinates[1]];
         pubsub.pub('missileStrike', [coordinates[2], location]);
+
+        computerStrikesBack();
+    }
+
+    function computerStrikesBack() {
+        let x = generateCoordinate();
+        let y = generateCoordinate();
+
+        if (p1.fleet.grid[x][y] !== 'x' && p1.fleet.grid[x][y] !== '-') {
+            p2.attack(p1, x, y);
+            pubsub.pub('strikeBack', [p1, x, y]);
+            console.log(p1.fleet.grid);
+        } else {
+            computerStrikesBack();
+        }
     }
 
     function placePlayerShips(cell) {
@@ -68,14 +83,14 @@ export const game = (() => {
                 player.fleet.placeShip(ship, x, y);
             }
         });
-        console.log(player.fleet.grid);
     }
 
     function generateCoordinate(length) {
         let num = Math.floor(Math.random() * 10);
+        let maxLength = length || 1;
 
-        if (num > 10 - length) {
-            num = 10 - length;
+        if (num > 10 - maxLength) {
+            num = 10 - maxLength;
         }
 
         return num;

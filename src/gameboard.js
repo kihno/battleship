@@ -1,3 +1,4 @@
+import { pubsub } from './pubsub';
 import {Ship} from './ship';
 
 export class Gameboard {
@@ -39,7 +40,7 @@ export class Gameboard {
             
         } else {
             space = [];
-            for (let i = parseInt(x); i < x + ship.length; i++) {
+            for (let i = x; i < x + ship.length; i++) {
                 let cell = this.grid[i][y];
                 space.push(cell);
             }
@@ -53,8 +54,6 @@ export class Gameboard {
                 ship.isPlaced = true;
             }
         }
-
-        console.log(this.grid);
     }
 
     rotateShip(ship) {
@@ -85,7 +84,6 @@ export class Gameboard {
 
             this.grid[x][y] = 'x';
         }
-
     }
 
     miss(x, y) {
@@ -96,6 +94,7 @@ export class Gameboard {
         ship.defense.every(el => {
             if (el === 'x') {
                 ship.isOperational = false;
+                console.log(`${ship.name} has been sunk`);
                 this.isFleetSunk();
             }
         });
@@ -104,6 +103,7 @@ export class Gameboard {
     isFleetSunk() {
         let result = this.allShips.every(ship => {
             if (ship.isOperational === false) {
+                console.log('fleet has been sunk')
                 return true;
             }
         });

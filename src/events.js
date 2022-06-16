@@ -1,10 +1,9 @@
 import { pubsub } from './pubsub';
-import { game } from './gameLoop';
-import Carrier from './img/carrier.png';
-import Battleship from './img/battleship.png';
-import Submarine from './img/submarine.png';
-import Destroyer from './img/destroyer.png';
-import Patrol from './img/patrol.png';
+import Carrier from './img/carrier-w.png';
+import Battleship from './img/battleship-w.png';
+import Submarine from './img/submarine-w.png';
+import Destroyer from './img/destroyer-w.png';
+import Patrol from './img/patrol-w.png';
 
 export const events = (() => {
     const playButton = document.getElementById('playButton');
@@ -14,13 +13,13 @@ export const events = (() => {
     const shipContainer = document.getElementById('shipContainer');
     const ships = document.getElementById('ships');
     const rotate = document.getElementById('rotate');
-    const dragOverCell = document.getElementsByClassName('dragOver');
 
     playButton.addEventListener('click', newGame);
     rotate.addEventListener('click', toggleRotate);
 
     pubsub.sub('gameCreated', renderGame);
     pubsub.sub('missileStrike', renderMissileStrike);
+    pubsub.sub('strikeBack', renderStrikeBack);
 
     let dragTarget;
     let vertical = false;
@@ -33,6 +32,8 @@ export const events = (() => {
     function renderGame(players) {
         playButton.style.display = 'none';
         shipContainer.style.display = 'flex';
+        playerBoard.style.display = 'grid';
+        aiBoard.style.display = 'grid';
 
         createPlayerGrid(players.p1);
         createComputerGrid(players.p2);  
@@ -84,7 +85,7 @@ export const events = (() => {
                 cell.className = 'cell';
                 cell.dataset.x = i;
                 cell.dataset.y = index;
-                cell.dataset.value = item;
+                cell.dataset.value = 0;
 
                 aiBoard.appendChild(cell);
                 cell.addEventListener('click', fire);
@@ -318,7 +319,6 @@ export const events = (() => {
         pubsub.pub('shipPlaced', e.target);
     }
 
-
     function fire(e) {
         let x = e.target.dataset.x;
         let y = e.target.dataset.y;
@@ -329,6 +329,22 @@ export const events = (() => {
 
     function renderMissileStrike(target) {
         target[0].dataset.value = target[1];
+    }
+
+    function renderStrikeBack(location) {
+        let x = location[1];
+        let y = location[2];
+
+        [...playerBoard.children].forEach(cell => {
+            if (cell.dataset.x == x && cell.dataset.y == y) {
+                if (location[0].fleet.grid[x][y] === '-') {
+                    cell.dataset.value = '-';
+                } else {
+                    cell.dataset.value = 'x'
+                }
+            }
+        });
+        
     }
 
 })();
