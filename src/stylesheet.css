@@ -141,3 +141,11 @@ h1 {
     content: url(./img/hit.png);
     z-index: 0;
 }
+
+#footer {
+    color: white;
+    position: absolute;
+    align-self: center;
+    text-align: center;
+    bottom: 0;
+}
