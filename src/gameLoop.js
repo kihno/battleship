@@ -12,8 +12,8 @@ export const game = (() => {
     pubsub.sub('shipPlaced', placePlayerShips);
 
     function createGame() {
-        p1 = new Player;
-        p2 = new Player;
+        p1 = new Player('user');
+        p2 = new Player('computer');
 
         const players = {
             p1,
@@ -41,7 +41,9 @@ export const game = (() => {
         let location = p2.fleet.grid[coordinates[0]][coordinates[1]];
         pubsub.pub('missileStrike', [coordinates[2], location]);
 
-        computerStrikesBack();
+        if (p2.fleet.isFleetOperational) {
+            computerStrikesBack();
+        }
     }
 
     function computerStrikesBack() {
@@ -51,7 +53,6 @@ export const game = (() => {
         if (p1.fleet.grid[x][y] !== 'x' && p1.fleet.grid[x][y] !== '-') {
             p2.attack(p1, x, y);
             pubsub.pub('strikeBack', [p1, x, y]);
-            console.log(p1.fleet.grid);
         } else {
             computerStrikesBack();
         }
@@ -83,6 +84,7 @@ export const game = (() => {
                 player.fleet.placeShip(ship, x, y);
             }
         });
+        console.log(player.fleet.grid);
     }
 
     function generateCoordinate(length) {

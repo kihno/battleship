@@ -23,11 +23,7 @@ export class Ship {
     }
 
     isSunk() {
-        if (this.defense.includes('o')) {
-            return false;
-        } else {
-            return true;
-        }
+        return !this.isOperational;
     }
 
 }

@@ -3,6 +3,8 @@ import {Ship} from './ship';
 
 export class Gameboard {
 
+    isFleetOperational = true;
+
     carrier = new Ship('carrier', 5);
     battleship = new Ship('battleship', 4);
     destroyer = new Ship('destroyer', 3);
@@ -68,7 +70,7 @@ export class Gameboard {
         return num === 0;
     } 
 
-    receiveAttack(x, y) {
+    receiveAttack(enemy, x, y) {
         if (this.grid[x][y] === 0) {
             this.miss(x, y);
         } else {
@@ -78,7 +80,7 @@ export class Gameboard {
 
                 if (ship.name === hitShip) {
                     ship.hit(hitIndex);
-                    this.isSunk(ship);
+                    this.isSunk(enemy, ship);
                 }
             });
 
@@ -90,23 +92,31 @@ export class Gameboard {
         this.grid[x][y] = '-';
     }
 
-    isSunk(ship) {
-        ship.defense.every(el => {
-            if (el === 'x') {
-                ship.isOperational = false;
-                console.log(`${ship.name} has been sunk`);
-                this.isFleetSunk();
-            }
-        });
+    isSunk(enemy, ship) {
+        if (ship.defense.includes('o')) {
+            return;
+        } else {
+            let index = this.allShips.indexOf(ship);
+            this.allShips.splice(index, 1);
+            
+            let name = enemy.name;
+            let shipName = ship.name;
+            pubsub.pub('shipSunk', {name, shipName});
+
+            this.isFleetSunk(name);
+        }
     }
 
-    isFleetSunk() {
-        let result = this.allShips.every(ship => {
-            if (ship.isOperational === false) {
-                console.log('fleet has been sunk')
-                return true;
-            }
-        });
-        return result;
+    isFleetSunk(name) {
+        let sunkFleet = this.allShips.every(ship =>
+            (ship.isOperational === false)
+        );
+        
+        if (!sunkFleet) {
+            return;
+        } else {
+            this.isFleetOperatioanl = false;
+            pubsub.pub('gameOver', name);
+        }
     }
 }

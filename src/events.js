@@ -7,7 +7,7 @@ import Patrol from './img/patrol-w.png';
 
 export const events = (() => {
     const playButton = document.getElementById('playButton');
-    const display = document.getElementById('display');
+    const info = document.getElementById('info');
     const playerBoard = document.getElementById('playerBoard');
     const aiBoard = document.getElementById('aiBoard');
     const shipContainer = document.getElementById('shipContainer');
@@ -20,11 +20,14 @@ export const events = (() => {
     pubsub.sub('gameCreated', renderGame);
     pubsub.sub('missileStrike', renderMissileStrike);
     pubsub.sub('strikeBack', renderStrikeBack);
+    pubsub.sub('shipSunk', alertShipSunk);
+    pubsub.sub('gameOver', gameOver);
 
     let dragTarget;
     let vertical = false;
 
     function newGame() {
+        resetBoard();
         playButton.style.display = 'none';
         pubsub.pub('newGame');
     }
@@ -317,14 +320,29 @@ export const events = (() => {
         vertical = false;
 
         pubsub.pub('shipPlaced', e.target);
+
+        hideShipContainer();
+    }
+
+    function hideShipContainer() {
+        if (!ships.hasChildNodes()) {
+            shipContainer.style.display = 'none';
+            aiBoard.style.marginRight = 0;
+        }
     }
 
     function fire(e) {
-        let x = e.target.dataset.x;
-        let y = e.target.dataset.y;
+        if (ships.children.length > 0) {
+            info.textContent = 'Place all of your ships before attacking the enemy.'
+        } else {
+            info.textContent = '';
 
-        pubsub.pub('missileLaunched', [x,y, e.target]);
-        e.target.removeEventListener('click', fire);
+            let x = e.target.dataset.x;
+            let y = e.target.dataset.y;
+
+            pubsub.pub('missileLaunched', [x,y, e.target]);
+            e.target.removeEventListener('click', fire);
+        }
     }
 
     function renderMissileStrike(target) {
@@ -345,6 +363,36 @@ export const events = (() => {
             }
         });
         
+    }
+
+    function alertShipSunk(player) {
+        if (player.name === 'computer') {
+            info.textContent = `You have sunk your opponent's ${player.shipName}.`;
+        } else {
+            info.textContent = `Your ${player.shipName} has sunk.`;
+        }
+    }
+
+    function gameOver(player) {
+        [...aiBoard.children].forEach(sibling => sibling.removeEventListener('click', fire));
+
+        if (player === 'computer') {
+            info.textContent = `Game Over. Your opponent's fleet has sunk.`;
+        } else  {
+            info.textContent = `Game Over. Your fleet has sunk.`;
+        }
+
+        playButton.style.display = 'block';
+    }
+
+    function resetBoard() {
+        while(playerBoard.firstChild) {
+            playerBoard.removeChild(playerBoard.firstChild);
+        }
+
+        while(aiBoard.firstChild) {
+            aiBoard.removeChild(aiBoard.firstChild);
+        }
     }
 
 })();
