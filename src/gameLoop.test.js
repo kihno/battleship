@@ -1,12 +1,5 @@
 import {game} from './gameLoop';
 
-// let zone;
-
-// beforeEach(() => {;
-//     zone = game.createGame().fleet.grid[i];
-// });
-// let p2;
-
 let p1;
 let p2;
 

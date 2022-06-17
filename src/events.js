@@ -383,6 +383,7 @@ export const events = (() => {
         }
 
         playButton.style.display = 'block';
+        aiBoard.style.marginRight = '220px';
     }
 
     function resetBoard() {
@@ -393,6 +394,7 @@ export const events = (() => {
         while(aiBoard.firstChild) {
             aiBoard.removeChild(aiBoard.firstChild);
         }
+        info.textContent = '';
     }
 
 })();

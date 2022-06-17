@@ -20,6 +20,16 @@ h1 {
     text-align: center;
 }
 
+#playButton, #rotate {
+    cursor: pointer;
+    background-color: #f94c3a;
+    color: white;
+    font-size: 25px;
+    border: none;
+    width: 200px;
+    height: 50px;
+}
+
 #display {
     display: flex;
     justify-content: center;
@@ -29,6 +39,10 @@ h1 {
 
 #aiBoard {
     margin-right: 220px;
+}
+
+#aiBoard>.cell {
+    cursor: crosshair;
 }
 
 #info {
@@ -41,6 +55,7 @@ h1 {
     display: none;
     flex-direction: column;
     width: 200px;
+    gap: 5px;
 }
 
 #ships {
@@ -48,6 +63,10 @@ h1 {
     flex-direction: column;
     align-items: flex-start;
     background-color: black;
+}
+
+#carrierContainerr>img {
+    cursor: grab;
 }
 
 .ship {
@@ -105,6 +124,7 @@ h1 {
 }
 
 .cell>img {
+    cursor: grab;
     position: absolute;
 }
 
