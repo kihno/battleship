@@ -56,6 +56,8 @@ export const events = (() => {
             image.draggable = true;
             image.addEventListener('dragstart', dragStart);
             image.addEventListener('dragend', dragEnd);
+            image.addEventListener('touchstart', dragStart);
+            image.addEventListener('touchend', dragEnd);
             div.appendChild(image);
             ships.appendChild(div);
             i++;
